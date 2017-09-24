@@ -68,13 +68,15 @@ with tf.Session() as sess:
     sess.run(init)
     # 迭代21个周期
     for epoch in range(21):
+        avg_loss = 0
         # 每个周期迭代n_batch个batch，每个batch为100
         for batch in range(n_batch):
             # 获得一个batch的数据和标签
             batch_xs, batch_ys = mnist.train.next_batch(batch_size)
             # 通过feed喂到模型中进行训练
-            sess.run(train_step, feed_dict={x: batch_xs, y: batch_ys})
-
+            _, c = sess.run([train_step, loss], feed_dict={x: batch_xs, y: batch_ys})
+            avg_loss += c
+        print("Epoch:{} loss:{}".format(epoch, avg_loss/batch_size))
         # 计算准确率
         acc = sess.run(accuracy, feed_dict={x: mnist.test.images, y: mnist.test.labels})
         print("Iter " + str(epoch) + ",Testing Accuracy " + str(acc))
