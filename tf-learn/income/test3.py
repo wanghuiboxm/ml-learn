@@ -34,6 +34,7 @@ CATEGORICAL_COLUMNS = ["workclass", "education", "marital_status", "occupation",
 CONTINUOUS_COLUMNS = ["age", "education_num", "capital_gain", "capital_loss",
                       "hours_per_week"]
 
+
 # build the estimator
 def build_estimator(model_dir):
     # 离散分类别的
@@ -50,7 +51,7 @@ def build_estimator(model_dir):
     capital_gain = tf.contrib.layers.real_valued_column("capital_gain")
     capital_loss = tf.contrib.layers.real_valued_column("capital_loss")
     hours_per_week = tf.contrib.layers.real_valued_column("hours_per_week")
-    #类别转换
+    # 类别转换
     age_buckets = tf.contrib.layers.bucketized_column(age, boundaries= [18,25, 30, 35, 40, 45, 50, 55, 60, 65])
 
     wide_columns = [gender, native_country,education, occupation, workclass, relationship, age_buckets,
@@ -58,7 +59,7 @@ def build_estimator(model_dir):
                     tf.contrib.layers.crossed_column([age_buckets, education, occupation], hash_bucket_size=int(1e6)),
                     tf.contrib.layers.crossed_column([native_country, occupation],hash_bucket_size=int(1e4))]
 
-    #embedding_column用来表示类别型的变量
+    # embedding_column用来表示类别型的变量
     deep_columns = [tf.contrib.layers.embedding_column(workclass, dimension=8),
                     tf.contrib.layers.embedding_column(education, dimension=8),
                     tf.contrib.layers.embedding_column(gender, dimension=8),
@@ -75,6 +76,7 @@ def build_estimator(model_dir):
         m = tf.contrib.learn.DNNLinearCombinedClassifier(model_dir=model_dir, linear_feature_columns=wide_columns, dnn_feature_columns = deep_columns, dnn_hidden_units=[100,50])
 
     return m
+
 
 def input_fn(df):
     continuous_cols = {k: tf.constant(df[k].values, shape=[df[k].size, 1]) for k in CONTINUOUS_COLUMNS}
@@ -113,7 +115,7 @@ def train_and_eval():
     df_train = df_train.dropna(how='any',axis=0)
     df_test = df_test.dropna(how='any', axis=0)
 
-    #convert >50 to 1
+    # convert >50 to 1
     df_train[LABEL_COLUMN] = (
         df_train["income_bracket"].apply(lambda x: ">50" in x).astype(int)
     )
@@ -131,6 +133,7 @@ def train_and_eval():
 
     for key in sorted(results):
         print("%s: %s"%(key, results[key]))
+
 
 def main(_):
     import time

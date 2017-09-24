@@ -71,8 +71,8 @@ def get_data():
                         hash_bucket_size=int(1e6)),
                     tf.contrib.layers.crossed_column([native_country, occupation],
                                                      hash_bucket_size=int(1e4))]
-    m = tf.contrib.learn.LinearClassifier(model_dir="D:/home/work/logistic_regression/census_income",
-                                          feature_columns=wide_columns)
+    for k in wide_columns:
+        print(k)
 
 if __name__ == '__main__':
     get_data()
