@@ -26,12 +26,16 @@
 # accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 # print(accuracy.eval({x: mnist.test.images, y_: mnist.test.labels}))
 
+"""
+利用softmax regression来模型识别数字
+"""
+
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
 
 # 载入数据集
-mnist = input_data.read_data_sets("MNIST_data",one_hot=True)
+mnist = input_data.read_data_sets("MNIST_data", one_hot=True)
 
 # 每个批次100张照片
 batch_size = 100
@@ -76,10 +80,9 @@ with tf.Session() as sess:
             # 通过feed喂到模型中进行训练
             _, c = sess.run([train_step, loss], feed_dict={x: batch_xs, y: batch_ys})
             avg_loss += c
-        print("Epoch:{} loss:{}".format(epoch, avg_loss/batch_size))
+        print("Epoch:{} loss:{}, a".format(epoch, avg_loss/n_batch))
         # 计算准确率
         acc = sess.run(accuracy, feed_dict={x: mnist.test.images, y: mnist.test.labels})
         print("Iter " + str(epoch) + ",Testing Accuracy " + str(acc))
-
 
 
